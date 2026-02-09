@@ -14,16 +14,16 @@ body {
 .heart {
   position: fixed;
   top: -10px;
-  font-size: 20px;
+  font-size: 22px;
   animation: fall linear forwards;
   pointer-events: none;
-  z-index: 0;
+  z-index: 1;
 }
 
 @keyframes fall {
   to {
     transform: translateY(110vh);
-    opacity: 0.7;
+    opacity: 0.8;
   }
 }
 
@@ -38,15 +38,15 @@ body {
 
 .burst {
   position: fixed;
-  font-size: 28px;
-  animation: burstAnim 1s ease-out forwards;
+  font-size: 30px;
+  animation: burstAnim 1.1s ease-out forwards;
   pointer-events: none;
-  z-index: 999;
+  z-index: 9999;
 }
 
 @keyframes burstAnim {
   from { opacity: 1; transform: scale(1); }
-  to { opacity: 0; transform: translate(var(--x), var(--y)) scale(0.3); }
+  to { opacity: 0; transform: translate(var(--x), var(--y)) scale(0.2); }
 }
 
 /* FLASH */
@@ -55,13 +55,13 @@ body {
   inset: 0;
   background: radial-gradient(circle, #ff9ad5, #ff4fa3);
   opacity: 0;
-  animation: flashAnim 0.8s ease forwards;
-  z-index: 998;
+  animation: flashAnim 0.9s ease forwards;
+  z-index: 9998;
 }
 
 @keyframes flashAnim {
   0% { opacity: 0; }
-  30% { opacity: 0.9; }
+  30% { opacity: 0.95; }
   100% { opacity: 0; }
 }
 
@@ -71,7 +71,7 @@ body {
 }
 
 @keyframes zoomIn {
-  from { transform: scale(0.8); opacity: 0; }
+  from { transform: scale(0.85); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
 }
 </style>
@@ -79,7 +79,7 @@ body {
 
 <body class="bg-pink-50 flex items-center justify-center min-h-screen overflow-hidden px-4">
 
-<audio id="romanticMusic" loop>
+<audio id="romanticMusic" preload="auto">
   <source src="at-last.mp3" type="audio/mpeg">
 </audio>
 
@@ -149,22 +149,31 @@ setInterval(() => {
   heart.style.animationDuration = (3 + Math.random() * 3) + 's';
   document.body.appendChild(heart);
   setTimeout(() => heart.remove(), 6000);
-}, 400);
+}, 450);
 
 // CLICK SI
 function handleYes(event) {
+
+  // vibrazione (mobile)
+  if (navigator.vibrate) {
+    navigator.vibrate([200, 100, 200]);
+  }
+
   // flash
   const flash = document.createElement('div');
   flash.className = 'flash';
   document.body.appendChild(flash);
-  setTimeout(() => flash.remove(), 800);
+  setTimeout(() => flash.remove(), 900);
 
   document.body.classList.add('bg-pink-100');
 
   burstHearts(event);
 
+  // musica (fix PC)
   const music = document.getElementById('romanticMusic');
-  music.play().catch(()=>{});
+  music.currentTime = 0;
+  music.volume = 0.7;
+  music.play().catch(() => {});
 
   setTimeout(() => {
     document.getElementById('page1').classList.add('hidden');
@@ -172,37 +181,42 @@ function handleYes(event) {
     page2.classList.remove('hidden');
     page2.classList.add('zoomIn');
 
-    typeText("Hai appena reso qualcuno molto felice ❤️", "loveText");
+    typeText(
+      "Marika, hai appena reso qualcuno immensamente felice ❤️",
+      "loveText"
+    );
 
     setTimeout(() => {
       document.getElementById('photoContainer').classList.remove('hidden');
-    }, 600);
+    }, 700);
 
     setTimeout(() => {
       document.getElementById('appointmentInfo').classList.remove('hidden');
       startCountdown();
-    }, 1200);
+    }, 1300);
   }, 700);
 }
 
-// Esplosione cuori
-function burstHearts(event) {
-  const btn = event.target.getBoundingClientRect();
-  for (let i = 0; i < 40; i++) {
+// Esplosione cuori (centrata viewport, perfetta su PC)
+function burstHearts() {
+  const centerX = window.innerWidth / 2;
+  const centerY = window.innerHeight / 2;
+
+  for (let i = 0; i < 45; i++) {
     const heart = document.createElement('div');
     heart.className = 'burst';
     heart.innerHTML = ['💖','💘','❤️','💕'][Math.floor(Math.random()*4)];
-    heart.style.left = btn.left + btn.width / 2 + 'px';
-    heart.style.top = btn.top + btn.height / 2 + 'px';
-    heart.style.setProperty('--x', (Math.random() - 0.5) * 700 + 'px');
-    heart.style.setProperty('--y', (Math.random() - 0.5) * 700 + 'px');
+    heart.style.left = centerX + 'px';
+    heart.style.top = centerY + 'px';
+    heart.style.setProperty('--x', (Math.random() - 0.5) * 900 + 'px');
+    heart.style.setProperty('--y', (Math.random() - 0.5) * 900 + 'px');
     document.body.appendChild(heart);
-    setTimeout(() => heart.remove(), 1000);
+    setTimeout(() => heart.remove(), 1200);
   }
 }
 
 // Testo scritto
-function typeText(text, id, speed = 60) {
+function typeText(text, id, speed = 55) {
   let i = 0;
   const el = document.getElementById(id);
   el.innerHTML = '';
