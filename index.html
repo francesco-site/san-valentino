@@ -1,104 +1,138 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>San Valentino ❤️</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>San Valentino ❤️</title>
+<script src="https://cdn.tailwindcss.com"></script>
 
-  <style>
-    .heart {
-      position: fixed;
-      top: -10px;
-      font-size: 20px;
-      animation: fall linear forwards;
-      pointer-events: none;
-      z-index: 0;
-    }
+<style>
+body {
+  transition: background 1s ease;
+}
 
-    @keyframes fall {
-      to {
-        transform: translateY(110vh);
-        opacity: 0.7;
-      }
-    }
+.heart {
+  position: fixed;
+  top: -10px;
+  font-size: 20px;
+  animation: fall linear forwards;
+  pointer-events: none;
+  z-index: 0;
+}
 
-    .fadeIn {
-      animation: fadeInAnim 1s ease forwards;
-    }
+@keyframes fall {
+  to {
+    transform: translateY(110vh);
+    opacity: 0.7;
+  }
+}
 
-    @keyframes fadeInAnim {
-      from { opacity: 0; transform: scale(0.95); }
-      to { opacity: 1; transform: scale(1); }
-    }
+.fadeIn {
+  animation: fadeInAnim 1s ease forwards;
+}
 
-    .burst {
-      position: fixed;
-      font-size: 28px;
-      animation: burstAnim 1s ease-out forwards;
-      pointer-events: none;
-      z-index: 999;
-    }
+@keyframes fadeInAnim {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
 
-    @keyframes burstAnim {
-      from { opacity: 1; transform: scale(1); }
-      to { opacity: 0; transform: translate(var(--x), var(--y)) scale(0.3); }
-    }
-  </style>
+.burst {
+  position: fixed;
+  font-size: 28px;
+  animation: burstAnim 1s ease-out forwards;
+  pointer-events: none;
+  z-index: 999;
+}
+
+@keyframes burstAnim {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: translate(var(--x), var(--y)) scale(0.3); }
+}
+
+/* FLASH */
+.flash {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle, #ff9ad5, #ff4fa3);
+  opacity: 0;
+  animation: flashAnim 0.8s ease forwards;
+  z-index: 998;
+}
+
+@keyframes flashAnim {
+  0% { opacity: 0; }
+  30% { opacity: 0.9; }
+  100% { opacity: 0; }
+}
+
+/* ZOOM */
+.zoomIn {
+  animation: zoomIn 0.6s ease forwards;
+}
+
+@keyframes zoomIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+</style>
 </head>
-<body class="bg-pink-50 flex items-center justify-center min-h-screen overflow-hidden">
 
-  <!-- Musica parte solo dopo SI -->
-  <audio id="romanticMusic" loop>
-    <source src="at-last.mp3" type="audio/mpeg">
-  </audio>
+<body class="bg-pink-50 flex items-center justify-center min-h-screen overflow-hidden px-4">
 
-  <!-- PAGINA 1 -->
-  <div id="page1" class="relative text-center bg-white p-10 rounded-3xl shadow-xl max-w-lg z-10 fadeIn">
-    <h1 class="text-3xl font-bold text-pink-600 mb-6">💘 Marika, vorresti essere il mio San Valentino?</h1>
+<audio id="romanticMusic" loop>
+  <source src="at-last.mp3" type="audio/mpeg">
+</audio>
 
-    <div class="relative h-32 flex items-center justify-center">
-      <button onclick="handleYes()" class="bg-pink-500 hover:bg-pink-600 text-white px-8 py-3 rounded-2xl text-lg transition mr-6">
-        Sì ❤️
-      </button>
-      
-      <!-- ORA SCAPPA AL CLICK -->
-      <button id="noBtn" onclick="moveButton()" class="absolute bg-gray-300 hover:bg-gray-400 text-gray-800 px-8 py-3 rounded-2xl text-lg transition">
-        No 😢
-      </button>
-    </div>
+<!-- PAGE 1 -->
+<div id="page1" class="relative text-center bg-white p-6 sm:p-10 rounded-3xl shadow-xl max-w-lg w-full z-10 fadeIn">
+  <h1 class="text-2xl sm:text-3xl font-bold text-pink-600 mb-6">
+    💘 Marika, vorresti essere il mio San Valentino?
+  </h1>
+
+  <div class="relative h-32 flex items-center justify-center">
+    <button onclick="handleYes(event)"
+      class="bg-pink-500 hover:bg-pink-600 text-white px-6 sm:px-8 py-3 rounded-2xl text-lg transition mr-4">
+      Sì ❤️
+    </button>
+
+    <button id="noBtn" onclick="moveButton()"
+      class="absolute bg-gray-300 hover:bg-gray-400 text-gray-800 px-6 sm:px-8 py-3 rounded-2xl text-lg transition">
+      No 😢
+    </button>
+  </div>
+</div>
+
+<!-- PAGE 2 -->
+<div id="page2" class="hidden text-center bg-white p-6 sm:p-10 rounded-3xl shadow-xl max-w-lg w-full z-10">
+
+  <p id="loveText" class="text-lg sm:text-xl text-pink-500 mb-6 font-semibold"></p>
+
+  <div id="photoContainer" class="hidden mb-6 fadeIn">
+    <img src="foto.jpg"
+      class="rounded-2xl shadow-lg mx-auto max-h-72 sm:max-h-80 object-cover" />
   </div>
 
-  <!-- PAGINA 2 -->
-  <div id="page2" class="hidden text-center bg-white p-10 rounded-3xl shadow-xl max-w-lg z-10">
-    
-    <!-- FOTO CHE APPARE DOPO SI -->
-    <div id="photoContainer" class="hidden mb-6 fadeIn">
-      <img src="foto.jpg" class="rounded-2xl shadow-lg mx-auto max-h-80 object-cover" />
+  <h1 class="text-2xl sm:text-3xl font-bold text-pink-600 mb-6">
+    ✨ Il nostro appuntamento ✨
+  </h1>
+
+  <div id="appointmentInfo" class="hidden fadeIn">
+    <p class="text-lg mb-2">📅 <strong>14 Febbraio</strong></p>
+    <p class="text-lg mb-2">🕖 <strong>20:00</strong></p>
+    <p class="text-lg mb-4">📍 <strong>Ristorante La Volpe - Montegrotto Terme (PD)</strong></p>
+
+    <div class="mt-4 text-xl font-semibold text-pink-600">
+      ⏳ Mancano:
+      <div id="countdown" class="text-2xl mt-2"></div>
     </div>
-
-    <h1 class="text-3xl font-bold text-pink-600 mb-6">✨ Il nostro appuntamento ✨</h1>
-    
-    <div id="appointmentInfo" class="hidden fadeIn">
-      <p class="text-lg mb-3">📅 Data: <strong>14 Febbraio</strong></p>
-      <p class="text-lg mb-3">🕖 Orario: <strong>20:00</strong></p>
-      <p class="text-lg mb-3">📍 Luogo: <strong>Ristorante La Volpe - Montegrotto Terme (PD)</strong></p>
-
-      <div class="mt-6 text-xl font-semibold text-pink-600">
-        ⏳ Mancano:
-        <div id="countdown" class="text-2xl mt-2"></div>
-      </div>
-    </div>
-
   </div>
+</div>
 
 <script>
-
-/* Pulsante NO scappa al click */
+// NO scappa
 function moveButton() {
   const btn = document.getElementById('noBtn');
   const container = document.getElementById('page1');
-
   const maxX = container.offsetWidth - btn.offsetWidth;
   const maxY = container.offsetHeight - btn.offsetHeight;
 
@@ -106,62 +140,80 @@ function moveButton() {
   btn.style.top = Math.random() * maxY + 'px';
 }
 
-/* Cuori che cadono */
+// Cuori che cadono
 setInterval(() => {
   const heart = document.createElement('div');
   heart.className = 'heart';
   heart.innerHTML = '❤️';
   heart.style.left = Math.random() * window.innerWidth + 'px';
   heart.style.animationDuration = (3 + Math.random() * 3) + 's';
-
   document.body.appendChild(heart);
   setTimeout(() => heart.remove(), 6000);
 }, 400);
 
-/* CLICK SI */
-function handleYes() {
-  burstHearts();
+// CLICK SI
+function handleYes(event) {
+  // flash
+  const flash = document.createElement('div');
+  flash.className = 'flash';
+  document.body.appendChild(flash);
+  setTimeout(() => flash.remove(), 800);
+
+  document.body.classList.add('bg-pink-100');
+
+  burstHearts(event);
 
   const music = document.getElementById('romanticMusic');
   music.play().catch(()=>{});
 
   setTimeout(() => {
     document.getElementById('page1').classList.add('hidden');
-
     const page2 = document.getElementById('page2');
     page2.classList.remove('hidden');
-    page2.classList.add('fadeIn');
+    page2.classList.add('zoomIn');
+
+    typeText("Hai appena reso qualcuno molto felice ❤️", "loveText");
 
     setTimeout(() => {
       document.getElementById('photoContainer').classList.remove('hidden');
-    }, 500);
+    }, 600);
 
     setTimeout(() => {
       document.getElementById('appointmentInfo').classList.remove('hidden');
       startCountdown();
     }, 1200);
-
-  }, 800);
+  }, 700);
 }
 
-/* Esplosione cuori */
-function burstHearts() {
-  for (let i = 0; i < 25; i++) {
+// Esplosione cuori
+function burstHearts(event) {
+  const btn = event.target.getBoundingClientRect();
+  for (let i = 0; i < 40; i++) {
     const heart = document.createElement('div');
     heart.className = 'burst';
-    heart.innerHTML = '💖';
-    heart.style.left = window.innerWidth / 2 + 'px';
-    heart.style.top = window.innerHeight / 2 + 'px';
-
-    heart.style.setProperty('--x', (Math.random() - 0.5) * 600 + 'px');
-    heart.style.setProperty('--y', (Math.random() - 0.5) * 600 + 'px');
-
+    heart.innerHTML = ['💖','💘','❤️','💕'][Math.floor(Math.random()*4)];
+    heart.style.left = btn.left + btn.width / 2 + 'px';
+    heart.style.top = btn.top + btn.height / 2 + 'px';
+    heart.style.setProperty('--x', (Math.random() - 0.5) * 700 + 'px');
+    heart.style.setProperty('--y', (Math.random() - 0.5) * 700 + 'px');
     document.body.appendChild(heart);
     setTimeout(() => heart.remove(), 1000);
   }
 }
 
-/* COUNTDOWN */
+// Testo scritto
+function typeText(text, id, speed = 60) {
+  let i = 0;
+  const el = document.getElementById(id);
+  el.innerHTML = '';
+  const interval = setInterval(() => {
+    el.innerHTML += text[i];
+    i++;
+    if (i >= text.length) clearInterval(interval);
+  }, speed);
+}
+
+// Countdown
 function startCountdown() {
   const countdown = document.getElementById('countdown');
   const targetDate = new Date('Feb 14, 2026 20:00:00').getTime();
@@ -175,15 +227,14 @@ function startCountdown() {
       return;
     }
 
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-    const minutes = Math.floor((diff / (1000 * 60)) % 60);
-    const seconds = Math.floor((diff / 1000) % 60);
+    const d = Math.floor(diff / (1000*60*60*24));
+    const h = Math.floor((diff / (1000*60*60)) % 24);
+    const m = Math.floor((diff / (1000*60)) % 60);
+    const s = Math.floor((diff / 1000) % 60);
 
-    countdown.innerHTML = `${days}g ${hours}h ${minutes}m ${seconds}s`;
+    countdown.innerHTML = `${d}g ${h}h ${m}m ${s}s`;
   }, 1000);
 }
-
 </script>
 
 </body>
