@@ -62,7 +62,8 @@
         Sì ❤️
       </button>
       
-      <button id="noBtn" onmouseover="moveButton()" class="absolute bg-gray-300 hover:bg-gray-400 text-gray-800 px-8 py-3 rounded-2xl text-lg transition">
+      <!-- ORA SCAPPA AL CLICK -->
+      <button id="noBtn" onclick="moveButton()" class="absolute bg-gray-300 hover:bg-gray-400 text-gray-800 px-8 py-3 rounded-2xl text-lg transition">
         No 😢
       </button>
     </div>
@@ -72,13 +73,13 @@
   <div id="page2" class="hidden text-center bg-white p-10 rounded-3xl shadow-xl max-w-lg z-10">
     
     <!-- FOTO CHE APPARE DOPO SI -->
-    <div id="photoContainer" class="hidden mb-6">
+    <div id="photoContainer" class="hidden mb-6 fadeIn">
       <img src="foto.jpg" class="rounded-2xl shadow-lg mx-auto max-h-80 object-cover" />
     </div>
 
     <h1 class="text-3xl font-bold text-pink-600 mb-6">✨ Il nostro appuntamento ✨</h1>
     
-    <div id="appointmentInfo" class="hidden">
+    <div id="appointmentInfo" class="hidden fadeIn">
       <p class="text-lg mb-3">📅 Data: <strong>14 Febbraio</strong></p>
       <p class="text-lg mb-3">🕖 Orario: <strong>20:00</strong></p>
       <p class="text-lg mb-3">📍 Luogo: <strong>Ristorante La Volpe - Montegrotto Terme (PD)</strong></p>
@@ -93,7 +94,7 @@
 
 <script>
 
-/* Pulsante NO scappa */
+/* Pulsante NO scappa al click */
 function moveButton() {
   const btn = document.getElementById('noBtn');
   const container = document.getElementById('page1');
@@ -121,7 +122,8 @@ setInterval(() => {
 function handleYes() {
   burstHearts();
 
-  document.getElementById('romanticMusic').play().catch(()=>{});
+  const music = document.getElementById('romanticMusic');
+  music.play().catch(()=>{});
 
   setTimeout(() => {
     document.getElementById('page1').classList.add('hidden');
@@ -130,12 +132,10 @@ function handleYes() {
     page2.classList.remove('hidden');
     page2.classList.add('fadeIn');
 
-    /* Mostra foto prima */
     setTimeout(() => {
       document.getElementById('photoContainer').classList.remove('hidden');
     }, 500);
 
-    /* Poi info appuntamento */
     setTimeout(() => {
       document.getElementById('appointmentInfo').classList.remove('hidden');
       startCountdown();
