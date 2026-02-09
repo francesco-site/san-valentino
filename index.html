@@ -171,4 +171,94 @@ function handleYes() {
   // flash
   const flash = document.createElement('div');
   flash.className = 'flash';
-  document.body.appendC
+  document.body.appendChild(flash);
+  setTimeout(() => flash.remove(), 1000);
+
+  // musica
+  const music = document.getElementById('romanticMusic');
+  music.currentTime = 0;
+  music.volume = 0.8;
+  music.play().catch(()=>{});
+
+  burstHearts();
+
+  setTimeout(() => {
+    page1.classList.add('hidden');
+    page2.classList.remove('hidden');
+    page2.classList.add('zoomIn');
+
+    typeText(
+      "Marika, hai appena reso qualcuno davvero felice ❤️",
+      "loveText"
+    );
+
+    // FOTO
+    setTimeout(() => {
+      photoContainer.classList.remove('hidden');
+      photoContainer.classList.add('slideUp');
+    }, 1200);
+
+    // TITOLO
+    setTimeout(() => {
+      title2.classList.remove('hidden');
+      title2.classList.add('fadeIn');
+    }, 2200);
+
+    // INFO
+    setTimeout(() => {
+      appointmentInfo.classList.remove('hidden');
+      appointmentInfo.classList.add('slideUp');
+    }, 3200);
+
+    // COUNTDOWN
+    setTimeout(() => {
+      countdownBox.classList.remove('hidden');
+      countdownBox.classList.add('fadeIn');
+      startCountdown();
+    }, 4300);
+
+  }, 800);
+}
+
+// burst centrato
+function burstHearts() {
+  const cx = innerWidth / 2;
+  const cy = innerHeight / 2;
+  for (let i = 0; i < 45; i++) {
+    const h = document.createElement('div');
+    h.className = 'burst';
+    h.innerHTML = ['💖','💘','❤️','💕'][Math.floor(Math.random()*4)];
+    h.style.left = cx + 'px';
+    h.style.top = cy + 'px';
+    h.style.setProperty('--x', (Math.random() - 0.5) * 900 + 'px');
+    h.style.setProperty('--y', (Math.random() - 0.5) * 900 + 'px');
+    document.body.appendChild(h);
+    setTimeout(() => h.remove(), 1200);
+  }
+}
+
+// testo scritto
+function typeText(text, id, speed = 55) {
+  let i = 0;
+  const el = document.getElementById(id);
+  el.innerHTML = '';
+  const t = setInterval(() => {
+    el.innerHTML += text[i++];
+    if (i >= text.length) clearInterval(t);
+  }, speed);
+}
+
+// countdown
+function startCountdown() {
+  const t = new Date('Feb 14, 2026 20:00:00').getTime();
+  setInterval(() => {
+    const d = t - Date.now();
+    countdown.innerHTML = d <= 0
+      ? 'È il momento ❤️'
+      : `${Math.floor(d/86400000)}g ${Math.floor(d/3600000)%24}h ${Math.floor(d/60000)%60}m ${Math.floor(d/1000)%60}s`;
+  }, 1000);
+}
+</script>
+
+</body>
+</html>
