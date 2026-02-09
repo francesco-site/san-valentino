@@ -11,6 +11,7 @@ body {
   transition: background 1s ease;
 }
 
+/* CUORI */
 .heart {
   position: fixed;
   top: -10px;
@@ -27,19 +28,31 @@ body {
   }
 }
 
+/* FADE */
 .fadeIn {
-  animation: fadeInAnim 1s ease forwards;
+  animation: fadeIn 1.2s ease forwards;
 }
 
-@keyframes fadeInAnim {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
+/* SLIDE DAL BASSO */
+.slideUp {
+  animation: slideUp 1.4s ease forwards;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* BURST */
 .burst {
   position: fixed;
   font-size: 30px;
-  animation: burstAnim 1.1s ease-out forwards;
+  animation: burstAnim 1.2s ease-out forwards;
   pointer-events: none;
   z-index: 9999;
 }
@@ -54,20 +67,19 @@ body {
   position: fixed;
   inset: 0;
   background: radial-gradient(circle, #ff9ad5, #ff4fa3);
-  opacity: 0;
-  animation: flashAnim 0.9s ease forwards;
+  animation: flashAnim 1s ease forwards;
   z-index: 9998;
 }
 
 @keyframes flashAnim {
   0% { opacity: 0; }
-  30% { opacity: 0.95; }
+  30% { opacity: 1; }
   100% { opacity: 0; }
 }
 
 /* ZOOM */
 .zoomIn {
-  animation: zoomIn 0.6s ease forwards;
+  animation: zoomIn 0.7s ease forwards;
 }
 
 @keyframes zoomIn {
@@ -90,7 +102,7 @@ body {
   </h1>
 
   <div class="relative h-32 flex items-center justify-center">
-    <button onclick="handleYes(event)"
+    <button onclick="handleYes()"
       class="bg-pink-500 hover:bg-pink-600 text-white px-6 sm:px-8 py-3 rounded-2xl text-lg transition mr-4">
       Sì ❤️
     </button>
@@ -107,24 +119,24 @@ body {
 
   <p id="loveText" class="text-lg sm:text-xl text-pink-500 mb-6 font-semibold"></p>
 
-  <div id="photoContainer" class="hidden mb-6 fadeIn">
+  <div id="photoContainer" class="hidden mb-6">
     <img src="foto.jpg"
       class="rounded-2xl shadow-lg mx-auto max-h-72 sm:max-h-80 object-cover" />
   </div>
 
-  <h1 class="text-2xl sm:text-3xl font-bold text-pink-600 mb-6">
+  <h1 id="title2" class="hidden text-2xl sm:text-3xl font-bold text-pink-600 mb-6">
     ✨ Il nostro appuntamento ✨
   </h1>
 
-  <div id="appointmentInfo" class="hidden fadeIn">
+  <div id="appointmentInfo" class="hidden">
     <p class="text-lg mb-2">📅 <strong>14 Febbraio</strong></p>
     <p class="text-lg mb-2">🕖 <strong>20:00</strong></p>
     <p class="text-lg mb-4">📍 <strong>Ristorante La Volpe - Montegrotto Terme (PD)</strong></p>
+  </div>
 
-    <div class="mt-4 text-xl font-semibold text-pink-600">
-      ⏳ Mancano:
-      <div id="countdown" class="text-2xl mt-2"></div>
-    </div>
+  <div id="countdownBox" class="hidden mt-4 text-xl font-semibold text-pink-600">
+    ⏳ Mancano:
+    <div id="countdown" class="text-2xl mt-2"></div>
   </div>
 </div>
 
@@ -132,124 +144,31 @@ body {
 // NO scappa
 function moveButton() {
   const btn = document.getElementById('noBtn');
-  const container = document.getElementById('page1');
-  const maxX = container.offsetWidth - btn.offsetWidth;
-  const maxY = container.offsetHeight - btn.offsetHeight;
-
-  btn.style.left = Math.random() * maxX + 'px';
-  btn.style.top = Math.random() * maxY + 'px';
+  const c = document.getElementById('page1');
+  btn.style.left = Math.random() * (c.offsetWidth - btn.offsetWidth) + 'px';
+  btn.style.top = Math.random() * (c.offsetHeight - btn.offsetHeight) + 'px';
 }
 
-// Cuori che cadono
+// cuori
 setInterval(() => {
-  const heart = document.createElement('div');
-  heart.className = 'heart';
-  heart.innerHTML = '❤️';
-  heart.style.left = Math.random() * window.innerWidth + 'px';
-  heart.style.animationDuration = (3 + Math.random() * 3) + 's';
-  document.body.appendChild(heart);
-  setTimeout(() => heart.remove(), 6000);
+  const h = document.createElement('div');
+  h.className = 'heart';
+  h.innerHTML = '❤️';
+  h.style.left = Math.random() * window.innerWidth + 'px';
+  h.style.animationDuration = (3 + Math.random() * 3) + 's';
+  document.body.appendChild(h);
+  setTimeout(() => h.remove(), 6000);
 }, 450);
 
 // CLICK SI
-function handleYes(event) {
+function handleYes() {
 
-  // vibrazione (mobile)
+  // VIBRAZIONE (più forte)
   if (navigator.vibrate) {
-    navigator.vibrate([200, 100, 200]);
+    navigator.vibrate([300,150,300,150,400]);
   }
 
   // flash
   const flash = document.createElement('div');
   flash.className = 'flash';
-  document.body.appendChild(flash);
-  setTimeout(() => flash.remove(), 900);
-
-  document.body.classList.add('bg-pink-100');
-
-  burstHearts(event);
-
-  // musica (fix PC)
-  const music = document.getElementById('romanticMusic');
-  music.currentTime = 0;
-  music.volume = 0.7;
-  music.play().catch(() => {});
-
-  setTimeout(() => {
-    document.getElementById('page1').classList.add('hidden');
-    const page2 = document.getElementById('page2');
-    page2.classList.remove('hidden');
-    page2.classList.add('zoomIn');
-
-    typeText(
-      "Marika, hai appena reso qualcuno immensamente felice ❤️",
-      "loveText"
-    );
-
-    setTimeout(() => {
-      document.getElementById('photoContainer').classList.remove('hidden');
-    }, 700);
-
-    setTimeout(() => {
-      document.getElementById('appointmentInfo').classList.remove('hidden');
-      startCountdown();
-    }, 1300);
-  }, 700);
-}
-
-// Esplosione cuori (centrata viewport, perfetta su PC)
-function burstHearts() {
-  const centerX = window.innerWidth / 2;
-  const centerY = window.innerHeight / 2;
-
-  for (let i = 0; i < 45; i++) {
-    const heart = document.createElement('div');
-    heart.className = 'burst';
-    heart.innerHTML = ['💖','💘','❤️','💕'][Math.floor(Math.random()*4)];
-    heart.style.left = centerX + 'px';
-    heart.style.top = centerY + 'px';
-    heart.style.setProperty('--x', (Math.random() - 0.5) * 900 + 'px');
-    heart.style.setProperty('--y', (Math.random() - 0.5) * 900 + 'px');
-    document.body.appendChild(heart);
-    setTimeout(() => heart.remove(), 1200);
-  }
-}
-
-// Testo scritto
-function typeText(text, id, speed = 55) {
-  let i = 0;
-  const el = document.getElementById(id);
-  el.innerHTML = '';
-  const interval = setInterval(() => {
-    el.innerHTML += text[i];
-    i++;
-    if (i >= text.length) clearInterval(interval);
-  }, speed);
-}
-
-// Countdown
-function startCountdown() {
-  const countdown = document.getElementById('countdown');
-  const targetDate = new Date('Feb 14, 2026 20:00:00').getTime();
-
-  setInterval(() => {
-    const now = new Date().getTime();
-    const diff = targetDate - now;
-
-    if (diff <= 0) {
-      countdown.innerHTML = 'È il momento ❤️';
-      return;
-    }
-
-    const d = Math.floor(diff / (1000*60*60*24));
-    const h = Math.floor((diff / (1000*60*60)) % 24);
-    const m = Math.floor((diff / (1000*60)) % 60);
-    const s = Math.floor((diff / 1000) % 60);
-
-    countdown.innerHTML = `${d}g ${h}h ${m}m ${s}s`;
-  }, 1000);
-}
-</script>
-
-</body>
-</html>
+  document.body.appendC
